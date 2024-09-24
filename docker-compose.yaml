@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  # MLflow service
+  mlflow-server:
+    build:
+      context: ./mlflow
+    image: mlflow
+    container_name: mlflow-server
+    networks:
+      - mlops-network
+    ports:
+      - "8080:8080"
+
+  # Inference FastAPI
+  inference-server:
+    build:
+      context: ./inference
+    image: inference
+    container_name: inference-server
+    networks:
+      - mlops-network
+    ports:
+      - "5000:5000"
+    env_file:
+      - ./inference/.env
+
+# Define the custom network
+networks:
+  mlops-network:
+    driver: bridge
